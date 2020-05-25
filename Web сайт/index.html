@@ -1,0 +1,131 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="content-language" content="en">
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <script src="scripts.js"></script>
+    <title>Генератор задач</title>
+</head>
+<body onload="OnLoad()" onpopstate="OnLoad()">
+    <form class="card noPrint" novalidate>
+        <fieldset>
+
+            <!-- Form Name -->
+            <h5 class="card-header info-color white-text py-4">
+                <strong>Генератор задач</strong>
+                <span style="float: right"><strong><a href="info" style="color: #000000">Info</a></strong></span>
+            </h5>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="button1id"></label>
+            </div>
+            <!-- Select Basic -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label class="control-label" for="selectbasic">Выберите параграф</label>
+                        <div class="text-center">
+                            <select id="selectbasic" name="selectbasic" class="form-control" onchange="Update1()">
+                                <option value="1">Параграф 1</option>
+                                <option value="2">Параграф 2</option>
+                                <option value="3">Параграф 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                    <div class="col-md-6 form-group">
+                        <label class="control-label" for="textinput1">Количество вариантов</label>
+                        <div class="">
+                            <input id="textinput1" name="textinput1" type="text" placeholder="число от 1 до 100" class="form-control input-md" required="" onchange="Check1(); Update2()" onkeyup="Check1(); Update2()">
+
+                            <div class="invalid-feedback">
+                                Введите число от 1 до 100
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="flex-direction: row-reverse;">
+                    <!-- Text input-->
+                    <div class="col-md-6 form-group">
+                        <label class="control-label" for="textinput2">Количество заданий</label>
+                        <div class="">
+                            <input id="textinput2" name="textinput2" type="text" placeholder="число от 1 до 20" class="form-control input-md" required="" onchange="Check2(); Update3()" onkeyup="Check2(); Update3()">
+
+                            <div class="invalid-feedback">
+                                Введите число от 1 до 20
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="col-md-6 form-group">
+                        <label class="control-label" for="textinput3">Ключ генерации</label>
+                        <div class="">
+                            <input id="textinput3" name="textinput3" type="text" placeholder="число от 0 до 9999" class="form-control input-md" onchange="Check3(); Update4()" onkeyup="Check3(); Update4()">
+                            <div class="invalid-feedback">
+                                Введите число от 0 до 9999 или оставьте это поле пустым
+                            </div>
+                            <small class="form-text text-muted">Если оставить пустым, то ключ выберется случайно</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button (Double) -->
+                <div class="form-group">
+                    <div class="">
+                        <button id="button1id" name="button1id" class="btn btn-success btn-sm" onclick="Ok()">Сгенерировать</button>
+                        <button type="reset" id="button2id" name="button2id" class="btn btn-primary btn-sm" onclick="Clear()">Сбросить настройки</button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <div id="latex-c" class="">
+        <div class="noPrint container">
+            <h6 id="print" class="" style="display:none; margin-top:1%; margin-bottom:2%; text-align:left">
+                <strong id="key" style="color: #808080"></strong>
+                <span style="float: right"><strong class="d-none d-md-flex" style="color: #808080" onclick="print()">для печати заданий нажмите Ctrl + P</strong></span>
+                <span style="float: right"><strong class="d-flex d-md-none" style="color: #808080" onclick="print()">печать</strong></span>
+            </h6>
+        </div>
+
+        <div id="latex" class="">
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <style>
+        @media print{
+            .noPrint, .header-left-top, .a-right-bottom, .time-right-bottom {
+                display:none;
+            }
+        }
+    </style>
+</body>
+</html>
