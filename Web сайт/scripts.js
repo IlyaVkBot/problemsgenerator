@@ -13,6 +13,8 @@ function OnLoad() {
         document.getElementById('textinput2').value = search_params.get('textinput2');
     if (search_params.has('textinput3'))
         document.getElementById('textinput3').value = search_params.get('textinput3');
+    if (search_params.has('checkbox1'))
+        document.getElementById('checkbox1').checked = search_params.get('checkbox1') == 'true';
     
     if (Check1() & Check2() & Check3()) {
         document.title = "Генератор задач   Параграф: " + document.getElementById('selectbasic').value +
@@ -51,7 +53,7 @@ function Ok() {
     if (document.getElementById('button1id').innerHTML != "Сгенерировать с новым ключом" && document.getElementById('textinput3').value != "")
         newSearchParams.set('seed', document.getElementById('textinput3').value);
 
-    fetch(newUrl).then(async function(response) {
+    fetch(newUrl, { method: 'GET' }).then(async function(response) {
         if (response.ok) {
             var json = await response.json();
 
@@ -60,6 +62,7 @@ function Ok() {
             Update4();
             document.getElementById('button1id').innerHTML = "Сгенерировать с новым ключом";
             document.getElementById('key').innerHTML = "Ключ: " + (json[0]['seed'] - 1);
+            document.getElementById("printm").innerHTML = document.getElementById("checkbox1").checked ? "для печати ответов нажмите Ctrl + P" : "для печати заданий нажмите Ctrl + P";
             document.getElementById('print').style.display = 'block';
             document.title = "Генератор задач   Параграф: " + document.getElementById('selectbasic').value +
                 ", Вариантов: " + document.getElementById('textinput1').value +
@@ -67,27 +70,28 @@ function Ok() {
                 ", Ключ: " + document.getElementById('textinput3').value;
             window.history.pushState('{"url":"' + document.URL + '"}', "", document.URL);
             var text = "";
+            var ans = document.getElementById('checkbox1').checked?1:0;
             for (var i = 0; i < json.length; i++) {
                 text += "<div class=\"container\" style=\"background-color:#" + (i%2 == 0?"ffffff":"f8f8f8") + "\"><h4 style=\"padding-top:2%\">Вариант " + (i + 1) + "</h4>\n";
                 for (var j = 0; j < json[i]['tasks'].length; j++) {
                     if (json[i]['tasks'][j]['polynomials'].length <= 2) {
                         text += "<b>Задание " + (j + 1) + ". </b>" + json[i]['tasks'][j]['task'] + "\n<div class=\"row\" ><div class=\"col-lg-6\" ><div class=\"row\" >";
                         for (var k = 0; k < json[i]['tasks'][j]['polynomials'].length; k++) {
-                            text += "<div class=\"col-sm-6\" style=\"padding-bottom:1.2%;padding-top:0.5%\">" + (k + 1) + ") " + json[i]['tasks'][j]['polynomials'][k]['latex'] + "</div>";
+                            text += "<div class=\"col-sm-6\" style=\"padding-bottom:1.2%;padding-top:0.5%\">" + (k + 1) + ") " + json[i]['tasks'][j]['polynomials'][k][ans]['latex'] + "</div>";
                         }
                         text += "</div></div></div>";
                     } else {
-                        text += "<b>Задание " + (j + 1) + ". </b>" + json[i]['tasks'][j]['task'] + "\n<div class=\"row\" ><div class=\"col-sm-6\" ><div class=\"row\" >";
+                        text += "<b>Задание " + (j + 1) + ". </b>" + (ans==0?json[i]['tasks'][j]['task']:"Ответы:") + "\n<div class=\"row\" ><div class=\"col-sm-6\" ><div class=\"row\" >";
                         for (var k = 0; k < json[i]['tasks'][j]['polynomials'].length; k++) {
                             if (k == 2) text += "</div></div><div class=\"col-sm-6\" ><div class=\"row\" >";
-                            text += "<div class=\"col-lg-6\" style=\"padding-bottom:1.2%;padding-top:0.5%\">" + (k + 1) + ") " + json[i]['tasks'][j]['polynomials'][k]['latex'] + "</div>";
+                            text += "<div class=\"col-lg-6\" style=\"padding-bottom:1.2%;padding-top:0.5%\">" + (k + 1) + ") " + json[i]['tasks'][j]['polynomials'][k][ans]['latex'] + "</div>";
                         }
                         text += "</div></div></div>";
                     }
                 }
                 text += "</div>";
             }
-            console.log(text);
+            //console.log(json);
             document.getElementById('latex').innerHTML = text; 
             MathJax.typeset();
         } else {
@@ -171,4 +175,12 @@ function Check3(strict = false) {
         document.getElementById('textinput3').classList.add("is-valid");
         return true;
     }
+}
+
+function Update5() {
+    document.getElementById('button1id').innerHTML = "Сгенерировать";
+    var url = new URL(document.URL);
+    var search_params = url.searchParams;
+    search_params.set("checkbox1", document.getElementById('checkbox1').checked);
+    window.history.replaceState('generator', document.title, url);
 }

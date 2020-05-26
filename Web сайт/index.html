@@ -47,9 +47,9 @@
                         <label class="control-label" for="selectbasic">Выберите параграф</label>
                         <div class="text-center">
                             <select id="selectbasic" name="selectbasic" class="form-control" onchange="Update1()">
-                                <option value="1">Параграф 1</option>
-                                <option value="2">Параграф 2</option>
-                                <option value="3">Параграф 3</option>
+                                <option value="1">Квадрат и куб суммы</option>
+                                <option value="2">Разность квадратов</option>
+                                <option value="3">Сумма и разность кубов</option>
                             </select>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                 <div class="row" style="flex-direction: row-reverse;">
                     <!-- Text input-->
                     <div class="col-md-6 form-group">
-                        <label class="control-label" for="textinput2">Количество заданий</label>
+                        <label class="control-label" for="textinput2">Количество заданий в варианте</label>
                         <div class="">
                             <input id="textinput2" name="textinput2" type="text" placeholder="число от 1 до 20" class="form-control input-md" required="" onchange="Check2(); Update3()" onkeyup="Check2(); Update3()">
 
@@ -93,13 +93,27 @@
                 </div>
 
                 <!-- Button (Double) -->
-                <div class="form-group">
-                    <div class="">
-                        <button id="button1id" name="button1id" class="btn btn-success btn-sm" onclick="Ok()">Сгенерировать</button>
-                        <button type="reset" id="button2id" name="button2id" class="btn btn-primary btn-sm" onclick="Clear()">Сбросить настройки</button>
+                <div class="row" style="flex-direction: row-reverse;">
+                    <div class="col-md-6" style="display: flex; align-items: center;">
+                        <div class="row" style="height:35px; width:100%">
+
+                                <div class="col-3 material-switch pull-right" style="display:block;z-index:1">
+                                    <input id="checkbox1" name="someSwitchOption001" type="checkbox" onchange="Update5()" />
+                                    <label for="checkbox1" class="badge-primary" style="margin-left:4px; margin-right: 6px;"></label>
+                                </div>
+                                <div class="col-9" style="display:inline-flex;margin-top:-4px;z-index:0 ;margin-left:43px; position:absolute">
+                                    <label for="checkbox1" style="display:inline-flex;align-self: center; justify-content: center;">показать ответы</label>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="form-group col-md-6">
+                        <div class="">
+                            <button id="button1id" name="button1id" class="btn btn-success btn-sm" onclick="Ok()">Сгенерировать</button>
+                            <button type="reset" id="button2id" name="button2id" class="btn btn-primary btn-sm" onclick="Clear()">Сбросить настройки</button>
+                        </div>
                     </div>
+                    </row>
                 </div>
-            </div>
         </fieldset>
     </form>
 
@@ -107,7 +121,7 @@
         <div class="noPrint container">
             <h6 id="print" class="" style="display:none; margin-top:1%; margin-bottom:2%; text-align:left">
                 <strong id="key" style="color: #808080"></strong>
-                <span style="float: right"><strong class="d-none d-md-flex" style="color: #808080" onclick="print()">для печати заданий нажмите Ctrl + P</strong></span>
+                <span id="printm" style="float: right"><strong class="d-none d-md-flex" style="color: #808080" onclick="print()">для печати заданий нажмите Ctrl + P</strong></span>
                 <span style="float: right"><strong class="d-flex d-md-none" style="color: #808080" onclick="print()">печать</strong></span>
             </h6>
         </div>
@@ -121,9 +135,58 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <style>
-        @media print{
+        .material-switch > input[type="checkbox"] {
+            display: none;
+        }
+
+        .material-switch > label {
+            cursor: pointer;
+            margin-top: 0px;
+            height: 0px;
+            position: relative;
+            width: 30px;
+        }
+
+            .material-switch > label::before {
+                background: rgb(0, 0, 0);
+                box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.5);
+                border-radius: 6px;
+                content: '';
+                height: 12px;
+                margin-top: -6px;
+                position: absolute;
+                opacity: 0.3;
+                transition: all 0.4s ease-in-out;
+                width: 30px;
+            }
+
+            .material-switch > label::after {
+                background: rgb(255, 255, 255);
+                border-radius: 12px;
+                box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+                content: '';
+                height: 18px;
+                left: -3px;
+                margin-top: -6px;
+                position: absolute;
+                top: -3px;
+                transition: all 0.3s ease-in-out;
+                width: 18px;
+            }
+
+        .material-switch > input[type="checkbox"]:checked + label::before {
+            background: inherit;
+            opacity: 0.5;
+        }
+
+        .material-switch > input[type="checkbox"]:checked + label::after {
+            background: inherit;
+            left: 15px;
+        }
+
+        @media print {
             .noPrint, .header-left-top, .a-right-bottom, .time-right-bottom {
-                display:none;
+                display: none;
             }
         }
     </style>
